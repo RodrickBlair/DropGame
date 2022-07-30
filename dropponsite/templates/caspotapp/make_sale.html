@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% extends "caspotapp/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
+{% block body_block %}
+<style>
+    .hidden{
+    display:none
+    }
+</style>
+<div class="container text-center">
+<h3>Ticket Sale</h3>
+<h3>Ticket Sale 2</h3>
+    <br>
+    <div id = "clock" onload="currentTime()"></div>
+<div>
+    <br>
+<form action='/makesale' method="POST">{% csrf_token %}
+
+    {% if formset %}
+    {{ formset.management_form }}
+    <div id="form-list">
+    {% for form in formset %}
+        <div class="my-form">
+        {{  form.as_p }}
+        </div>
+    {% endfor %}
+    </div>
+    <div id="empty-form" class="hidden">{{ formset.empty_form.as_p }}</div>
+    <button id="add-more" type="button">Add More</button>
+    {% endif %}
+    <button type="submit">Submit</button>
+</form>
+
+</div>
+</div>
+   <script>
+    const addMoreBtn = document.getElementById('add-more')
+    const totalNumForms = document.getElementById('id_form-TOTAL_FORMS')
+
+    addMoreBtn.addEventListener('click', add_new_form)
+    function add_new_form(event){
+        if (event) {
+            event.preventDefault()
+        }
+        const currentNumberOfForms = document.getElementsByClassName('my-form')
+        let currentFormCount = currentNumberOfForms.length + 1
+        console.log(currentFormCount)
+        const formCopyTarget = document.getElementById('form-list')
+        const emptyForm = document.getElementById('empty-form').cloneNode(true)
+        emptyForm.setAttribute('class','my-form')
+        emptyForm.setAttribute('id','${currentFormCount}')
+        const regex = new RegExp('__prefix__', 'g')
+        emptyForm.innerHTML = emptyForm.innerHTML.replace(regex,
+        currentFormCount)
+        totalNumForms.setAttribute('value', currentFormCount + 1)
+        formCopyTarget.append(emptyForm)
+    }
+    </script>
+
+<script src="{% static 'bootstrap/js/scripts.js' %}"></script>
+{% endblock %}

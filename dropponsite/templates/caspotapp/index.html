@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% extends "caspotapp/base.html" %}
+{% block body_block %}
+
+  <div class="row text-center" >
+    <h2>Numbers Played Today</h2>
+    <h3> Date: {{ today_date }}</h3>
+    <table>
+    {% for numberplay in number_play %}
+      <tr>
+    <div class="col">
+      <div class="ball b2"><strong>{{ numberplay.numberplayed }}</strong></div>
+    </div>
+      </tr>
+
+    {% endfor %}
+    </table>
+  </div>
+<br>
+  <div class="row text-center">
+    <h2>Numbers Under For Kent</h2>
+    <h3> Date: {{ under_date }}</h3>
+    {% for i in kent_numbers %}
+    <div class="col">
+      <div class="ball b2"><strong>{{ i.numberplayed }}</strong></div>
+    </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

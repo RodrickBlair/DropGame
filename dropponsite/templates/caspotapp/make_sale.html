@@ -45,20 +45,20 @@
             </div>
         </div>
     </div>
+</body>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
 <script>
 
+var $newdiv = $("<div id='object1'></div>");
     $(document).ready(function(){
-        $(".add_item_btn").click(function(e){
-        e.preventDefault();
-        $("#show_item").prepend('<div class="row">
-            <div class="col-md-4 mb-4">
-            <input type="number" name="number[]" class="form-control" placeholder="Number">
-            </div>
-            </div>');
-        });
+    $(".add_item_btn").click(function(e){
+    e.preventDefault();
+    $("#show_item").prepend('New Row');
     });
+});
+
 
 </script>
 {% endblock %}

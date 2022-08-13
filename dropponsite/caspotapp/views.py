@@ -80,10 +80,16 @@ def profile(request):
         week_sale = 0
         pay = 0
 
+    num_played = Numberplay.objects.all()
+    num_won = TicketSale.objects.all()
+    print(num_played)
+    print(num_won)
+
     context = {
         'weeksale': week_sale,
         'pay': pay,
-        'daysale': day_sale
+        'daysale': day_sale,
+        'num_played': num_played,
     }
 
     return render(request, 'caspotapp/profile.html', context=context)

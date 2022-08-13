@@ -57,5 +57,10 @@
                 </div>
             </div>
         </section>
+        <div>
+            {% for number in num_played %}
+            {{ number }} {{ number.DRAW_TIME }}
+            {% endfor %}
+        </div>
 
 {% endblock %}

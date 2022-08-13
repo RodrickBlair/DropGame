@@ -5,26 +5,29 @@
   <div class="row text-center" >
     <h2>Numbers Played Today</h2>
     <h3> Date: {{ today_date }}</h3>
-    <table>
-    {% for numberplay in number_play %}
+    <table style="width:100%">
       <tr>
-    <div class="col">
-      <div class="ball b2"><strong>{{ numberplay.numberplayed }}</strong></div>
-    </div>
-      </tr>
-
+    {% for numberplay in number_play %}
+        <td>
+            <strong>{{  numberplay.numberplayed }} <br>{{  numberplay.mega }}</strong>
+        </td>
     {% endfor %}
+      </tr>
     </table>
   </div>
 <br>
   <div class="row text-center">
     <h2>Numbers Under For Kent</h2>
     <h3> Date: {{ under_date }}</h3>
+    <table style="width:100%">
+      <tr>
     {% for i in kent_numbers %}
-    <div class="col">
-      <div class="ball b2"><strong>{{ i.numberplayed }}</strong></div>
-    </div>
+     <td>
+      <strong>{{ i.numberplayed }} <br>{{  i.mega }}</strong>
+     </td>
     {% endfor %}
+    </tr>
+</table>
   </div>
 
 {% endblock %}

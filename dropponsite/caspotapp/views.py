@@ -119,18 +119,19 @@ def user_login(request):
 
 def make_sale(request):
     # form = TicketSaleForm(request.POST or None)
-    TicketSaleFormset = modelformset_factory(TicketSale, form=TicketSaleForm, extra=0)
-    formset = TicketSaleFormset(request.POST or None, )
-    context = {
-        'formset': formset
-
-    }
+    #TicketSaleFormset = modelformset_factory(TicketSale, form=TicketSaleForm, extra=0)
+    #formset = TicketSaleFormset(request.POST or None, )
     if request.method == "POST":
-        print(request.POST)
-    if formset.is_valid():
-        formset.save()
-        context['formset'] = TicketSaleFormset()
-    return render(request, 'caspotapp/make_sale.html', context=context)
+
+        numbers = request.POST['number']
+        values = request.POST["value"]
+        print(numbers)
+        print(values)
+        #print(values)
+    #if formset.is_valid():
+     #   formset.save()
+    #    context['formset'] = TicketSaleFormset()
+    return render(request, 'caspotapp/make_sale.html')
 
 
 def register(request):

@@ -40,7 +40,5 @@ class TicketSale(models.Model):
     value = models.PositiveIntegerField()
     draw_time = models.CharField(max_length=50, choices=DRAW_TIMES)
     draw_date = models.DateTimeField(auto_now=True)
-    ticket_number = models.PositiveIntegerField(max_length=None)
-
     def __str__(self):
         return str(self.num_sell)

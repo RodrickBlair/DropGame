@@ -1,47 +1,66 @@
-<!DOCTYPE html>
 {% extends "caspotapp/base.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
+{% load widget_tweaks %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 {% block body_block %}
 <style>
-    .hidden{
-    display:none
-    }
+	.hidden {
+		display: none
+	}
 </style>
-<body>
-<div class="container text-center bg-dark text-light my-5 p-3"> <h1>Create A Droppon Ticket</h1>
+<div class="container text-center">
+	<h3>Ticket Sale</h3>
+	<br>
+	<div id="clock" onload="currentTime()"></div>
+	<div>
+		<br>
+		<form action="{% url 'makesale' %}" method="POST">
+			{% csrf_token %}
+			<div class="row clearfix">
+				<div class="col-md-12 table-responsive">
+					<table class="table table-bordered table-hover table-sortable" id="tab_logic">
+						<thead>
+							<tr>
+								<th class="text-center">
+									num_sell
+								</th>
+								<th class="text-center">
+									value
+								</th>
+								<th class="text-center">
+									draw_time
+								</th>
+								<th class="text-center"
+									style="border-top: 1px solid #ffffff; border-right: 1px solid #ffffff;"><a
+										id="add_row" onclick="add_row()" class="btn btn-primary btn-sm">Add Row</a>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="t_body">
+
+							<tr>
+								<td>
+									{% render_field inputs.num_sell class="form-control" %}
+								</td>
+								<td>
+									{% render_field inputs.value class="form-control" %}
+								</td>
+								<td>
+									{% render_field inputs.draw_time class="form-control" %}
+								</td>
+								<td>
+									<input type="button" value="×" onclick="DeleteRowFunction()" class="btn btn-danger">
+								</td>
+							</tr>
+						</tbody>
+
+					</table>
+					<input type="submit" value="Submit" class="btn btn-success btn-lg w-5">
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
-<div class="container">
-    <form method="POST">{% csrf_token %}
-<table class="table table-bordered"> <thead>
-<tr>
-<th scope="col">Number</th> <th scope="col">Value</th>
-</tr>
-</thead>
-<tbody id="dynamicadd">
-<tr>
- <td><input type="number" name="number" id="email" class="form-control"></td> <td><input type="text" name="value" id="phone" class="form-control"></td> <td><button type="button" id="add" class="btn btn-success">+</button></td>
-</tr> </tbody>
-</table>
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
-</div>
-</body>
 
-
- <link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
-<script>
-
-$(document).ready(function(){
-var i = 1; $('#add').click(function(){
-//alert('ok');
-i++;
-$('#dynamicadd').append('<tr><td><input type="number" name="number'+i+'" id="email" class="form-control"></td><td><input type="text" name="value'+i+'" id="name" class="form-control"></td><td><button type="button" id="'+i+'" class="btn btn-danger remove_row">- </button></td></tr>');
-}); $(document).on('click','.remove_row',function(){
-var row_id = $(this).attr("id");
-$('#row'+row_id+'').remove(); });
-});
-
-
-</script>
+<!-- <script src="{% static 'bootstrap/js/scripts.js' %}"></script> -->
 {% endblock %}

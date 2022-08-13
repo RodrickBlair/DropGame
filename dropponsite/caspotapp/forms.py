@@ -15,4 +15,4 @@ class TicketSaleForm(forms.ModelForm):
     class Meta:
         model = TicketSale
         fields = ['vendor', 'num_sell', 'value',
-                  'draw_time', 'draw_time', 'ticket_number']
+                  'draw_time']

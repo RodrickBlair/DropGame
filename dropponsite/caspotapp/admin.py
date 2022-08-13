@@ -3,7 +3,7 @@ from .models import Numberplay, TicketSale
 # Register your models here.
 
 class TicketSaleAdmin(admin.ModelAdmin):
-    list_display = ['vendor', 'num_sell', 'value', 'draw_time', 'draw_date', 'ticket_number']
+    list_display = ['vendor', 'num_sell', 'value', 'draw_time', 'draw_date']
 
 class NumberplayAdmin(admin.ModelAdmin):
     list_display = ['numberplayed', 'mega', 'sale_date', 'draw']

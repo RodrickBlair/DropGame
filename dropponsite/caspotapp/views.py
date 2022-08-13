@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, TicketSaleForm
 import pytz
-from django.forms.models import modelformset_factory
+from django.contrib.auth.models import User
 from django.db.models import Sum
 
 
@@ -71,7 +71,6 @@ def profile(request):
     day_sale = TicketSale.objects.filter(draw_date__gte=str(today)).aggregate(Sum('value'))
     print(day_sale)
 
-
     try:
         day_sale = day_sale['value__sum']
         week_sale = weekly_sale['value__sum']
@@ -80,7 +79,6 @@ def profile(request):
         day_sale = 0
         week_sale = 0
         pay = 0
-
 
     context = {
         'weeksale': week_sale,
@@ -118,24 +116,41 @@ def user_login(request):
 
 
 def make_sale(request):
-    # form = TicketSaleForm(request.POST or None)
-    #TicketSaleFormset = modelformset_factory(TicketSale, form=TicketSaleForm, extra=0)
-    #formset = TicketSaleFormset(request.POST or None, )
-    if request.method == "POST":
+    context = {}
+    # grabing the lists of input values with getlist()
+    # request.POST.get() returns only 1st value but we are working with multiple forms
+    num_sells = request.POST.getlist('num_sell')
+    values = request.POST.getlist('value')
+    draw_times = request.POST.getlist('draw_time')
 
-        numbers = request.POST['number']
-        values = request.POST["value"]
-        number2 = request.POST or None["number2"]
-        value2 = request.POST or None["value2"]
-        print(numbers)
-        print(values)
-        print(number2)
-        print(value2)
-        #print(values)
-    #if formset.is_valid():
-     #   formset.save()
-    #    context['formset'] = TicketSaleFormset()
-    return render(request, 'caspotapp/make_sale.html')
+    # each time this if block is executed if form is submitted with POST method
+    if request.method == 'POST':
+        # checking if every field have same number of inputs
+        # For Example
+        # num_sells = ['value1', 'value2']
+        # values = ['value1', 'value2']
+        # draw_times = ['value1', 'value2']
+        # if any of the input list have less or more number of values, it is not going to save data to database
+        if len(num_sells) == len(values) == len(draw_times):
+            # just getting common length of input lists
+            total_forms = len(num_sells)
+            # from above example, 2 froms are being submitted so each input list have length of 2
+            for i in range(total_forms):
+                # creating TicketSale objects
+                # everytime with field "vendor" having default value of current logged in user (request.user)
+                # rest of the fields having values in sequece (as python lists maintain sequence of indexes)
+                temp_obj = TicketSale(vendor=request.user, num_sell=num_sells[i], value=values[i],
+                                      draw_time=draw_times[i])
+                temp_obj.save()
+            context['message'] = f'{total_forms} record(s) saved...'
+        else:
+            # This code block will be executed if there are some missing values or extra values
+            context['message'] = "Something went wrong..."
+
+    # everytime we pass "inputs" which essentially are inputs from forms.py file.
+    context['inputs'] = TicketSaleForm()
+
+    return render(request, 'caspotapp/make_sale.html', context)
 
 
 def register(request):

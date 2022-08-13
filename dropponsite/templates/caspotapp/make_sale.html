@@ -36,7 +36,7 @@ $(document).ready(function(){
 var i = 1; $('#add').click(function(){
 //alert('ok');
 i++;
-$('#dynamicadd').append('<tr id="row'+i+'"><td><input type="number" name="number" id="email" class="form-control"></td><td><input type="text" name="value" id="name" class="form-control"></td><td><button type="button" id="'+i+'" class="btn btn-danger remove_row">- </button></td></tr>');
+$('#dynamicadd').append('<tr><td><input type="number" name="number'+i+'" id="email" class="form-control"></td><td><input type="text" name="value'+i+'" id="name" class="form-control"></td><td><button type="button" id="'+i+'" class="btn btn-danger remove_row">- </button></td></tr>');
 }); $(document).on('click','.remove_row',function(){
 var row_id = $(this).attr("id");
 $('#row'+row_id+'').remove(); });

@@ -125,8 +125,12 @@ def make_sale(request):
 
         numbers = request.POST['number']
         values = request.POST["value"]
+        number2 = request.POST or None["number2"]
+        value2 = request.POST or None["value2"]
         print(numbers)
         print(values)
+        print(number2)
+        print(value2)
         #print(values)
     #if formset.is_valid():
      #   formset.save()

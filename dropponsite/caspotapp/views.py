@@ -65,11 +65,10 @@ def profile(request):
 
     new_date = number()
     today = date.today() + timedelta(1)
-    weekly_sale = TicketSale.objects.filter(draw_date__gte=str(new_date),
+    weekly_sale = TicketSale.objects.filter(vendor=request.user, draw_date__gte=str(new_date),
                                             draw_date__lte=str(today)).aggregate(Sum('value'))
     today = date.today()
-    day_sale = TicketSale.objects.filter(draw_date__gte=str(today)).aggregate(Sum('value'))
-    print(day_sale)
+    day_sale = TicketSale.objects.filter(vendor=request.user, draw_date__gte=str(today)).aggregate(Sum('value'))
 
     try:
         day_sale = day_sale['value__sum']
@@ -80,16 +79,14 @@ def profile(request):
         week_sale = 0
         pay = 0
 
-    num_played = Numberplay.objects.all()
-    num_won = TicketSale.objects.all()
-    print(num_played)
-    print(num_won)
+    played_num = Numberplay.objects.all()
+    print(played_num)
 
     context = {
         'weeksale': week_sale,
         'pay': pay,
         'daysale': day_sale,
-        'num_played': num_played,
+
     }
 
     return render(request, 'caspotapp/profile.html', context=context)

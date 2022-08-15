@@ -19,7 +19,7 @@ class Numberplay(models.Model):
     )
     numberplayed = models.PositiveIntegerField()
     mega = models.CharField(max_length=50, choices=MEGA_BALL)
-    sale_date = models.DateTimeField('sale date')
+    sale_date = models.DateField('sale date')
     draw = models.CharField(max_length=50, choices=DRAW_TIME)
 
     def __str__(self):
@@ -39,6 +39,6 @@ class TicketSale(models.Model):
     num_sell = models.PositiveIntegerField()
     value = models.PositiveIntegerField()
     draw_time = models.CharField(max_length=50, choices=DRAW_TIMES)
-    draw_date = models.DateTimeField(auto_now=True)
+    draw_date = models.DateField(auto_now=True)
     def __str__(self):
         return str(self.num_sell)

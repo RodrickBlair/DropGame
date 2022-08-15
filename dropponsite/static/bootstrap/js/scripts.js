@@ -30,7 +30,7 @@ if(ho <= 8 && mi <= 26){
     console.log('8:30AM Early Bird Draw')
 }else if(ho <= 10 && mi <= 26){
     console.log('10:30AM Morning Draw')
-}else if(ho <= 13){
+}else if(ho <= 10 && mi <=25){
     console.log('1:00PM Midday Draw')
 }else if(ho <= 15){
     console.log('3:00PM Mid Afternoon Draw')

@@ -70,5 +70,3 @@ function add_row() {
 
     t_body.appendChild(tr)
 }
-
-

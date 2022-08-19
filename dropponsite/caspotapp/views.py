@@ -79,8 +79,32 @@ def profile(request):
         week_sale = 0
         pay = 0
 
-    played_num = Numberplay.objects.all()
-    print(played_num)
+    query1 = TicketSale.objects.all().values_list()
+    query2 = Numberplay.objects.all().values_list()
+    #print(query1[0][5])
+    #print(query1[0][4])
+    #print(query2)
+
+    for i in query1:
+        j = i[2]
+        d = i[5]
+
+        for n in query2:
+            nd = n[3]
+            if j == n[1] and d == nd:
+                j = str(j)
+                print("Found Match for --------> " + j)
+            else:
+                n = str(n[1])
+                print("No Match found for --------> " + n)
+
+    # print(query1)
+    # fn = query1[0][2]
+    # fm = query1[0][2]
+    # if fn == fm:
+    #   pass
+    # else:
+    #     pass
 
     context = {
         'weeksale': week_sale,

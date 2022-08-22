@@ -70,6 +70,7 @@ def profile(request):
     today = date.today()
     day_sale = TicketSale.objects.filter(vendor=request.user, draw_date__gte=str(today)).aggregate(Sum('value'))
 
+
     try:
         day_sale = day_sale['value__sum']
         week_sale = weekly_sale['value__sum']
@@ -78,35 +79,49 @@ def profile(request):
         day_sale = 0
         week_sale = 0
         pay = 0
-
+    print(day_sale)
     query1 = TicketSale.objects.all().values_list()
     query2 = Numberplay.objects.all().values_list()
-    #print(query1[0][5])
-    #print(query1[0][4])
-    #print(query2)
+    # print(query1[0][5])
+    # print(query1[0][4])
+    # print(query2)
 
-    for i in query1:
-        j = i[2]
-        d = i[5]
+    dicts = {}
+    def findNumber():
 
-        for n in query2:
-            nd = n[3]
-            if j == n[1] and d == nd:
-                j = str(j)
-                print("Found Match for --------> " + j)
-            else:
-                n = str(n[1])
-                print("No Match found for --------> " + n)
+        found = 0
+        for i in query1:
+            j = i[2]
+            v = i[3]
+            d = i[5]
+            t = i[4]
+            s = i[6]
+            #print(j, d, t)
 
-    # print(query1)
-    # fn = query1[0][2]
-    # fm = query1[0][2]
-    # if fn == fm:
-    #   pass
-    # else:
-    #     pass
+            for n in query2:
+                p = n[1]
+                da = n[3]
+                ta = n[4]
+                #print(p, da, ta)
+
+                if j == p and d == da and t == ta and s == 0:
+                    found = found+1
+                    #print(found)
+                    dicts[found] = j
+                    dicts[found] = v
+                    #print(dicts)
+                    #print('<-----Found Winning number----->')
+                    #print(j, v, d, t)
+                    #print('<-----Found Winning number----->')
+                    #dick = j, v, t, d
+                    #print(dick)
+        return dicts
+
+    num = findNumber()
+    #print(dicts)
 
     context = {
+        'num': num,
         'weeksale': week_sale,
         'pay': pay,
         'daysale': day_sale,

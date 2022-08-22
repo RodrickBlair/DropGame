@@ -58,9 +58,12 @@
             </div>
         </section>
         <div>
-            {% for number in num_played %}
-            {{ number }} {{ number.DRAW_TIME }}
+            <h2>Amount to pay out</h2>
+            <ul>
+            {% for i in num.values %}
+                <li>{{ i }}</li> <button type="submit">Pay Now</button><br><br>
             {% endfor %}
+            </ul>
         </div>
 
 {% endblock %}

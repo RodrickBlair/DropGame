@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse, reverse_lazy
 
+from django.http import HttpResponseRedirect
 
 # Create your models here.
 
@@ -39,8 +41,11 @@ class TicketSale(models.Model):
     num_sell = models.PositiveIntegerField()
     value = models.PositiveIntegerField()
     draw_time = models.CharField(max_length=50, choices=DRAW_TIMES)
-    draw_date = models.DateField(auto_now=True)
+    draw_date = models.DateField(auto_now=False)
     won = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.num_sell)
+
+
+

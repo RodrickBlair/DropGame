@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% extends "caspotapp/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
+{% block body_block %}
+
+{{ number_detail.won }}
+    <form method="post">{% csrf_token %}
+<button type="submit" name="Pay">Go Back</button>
+    </form>
+{% endblock %}

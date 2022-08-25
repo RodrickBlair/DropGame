@@ -24,5 +24,8 @@ urlpatterns = [
     path('user_logout', views.user_logout, name='user_logout'),
     path('makesale', views.make_sale, name='makesale'),
     path('register', views.register, name='register'),
+    path('wins/<int:pk>', views.WinnersListView.as_view(), name='wins'),
+    path('update/<int:pk>', views.WinnerUpdateView.as_view(), name='update'),
+    #path('wins/', include('caspotapp.urls')),
     path('admin/', admin.site.urls),
 ]

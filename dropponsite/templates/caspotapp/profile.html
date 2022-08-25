@@ -51,19 +51,25 @@
                             <div class="count-data text-center">
                                 <h6 class="count h2" data-to="190" data-speed="190">0</h6>
                                 <p class="m-0px font-w-600">In Pot</p>
-                            </div>
+                        </div>
+                            <div class="col-6 col-lg-3">
+                            <div class="count-data text-center">
+                                <h6 class="count h2" data-to="190" data-speed="190">0</h6>
+                                <p class="m-0px font-w-600">In Pot</p>
+                        </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <div>
-            <h2>Amount to pay out</h2>
-            <ul>
-            {% for i in num.values %}
-                <li>{{ i }}</li> <button type="submit">Pay Now</button><br><br>
-            {% endfor %}
-            </ul>
-        </div>
+</section>
+<section id="wins">
+    <h2>Amount to pay out</h2>
+    <ul>
+        {% for x, y in num.items %}
+        <li>You have <a href="wins/{{ x }}">${{ y }}</a> to Payout Click for details</li><br>
+        <li><a href="update/{{ x }}">Pay</a> </li>
+        {% endfor %}
+
+</section>
 
 {% endblock %}

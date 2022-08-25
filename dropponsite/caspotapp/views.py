@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView,UpdateView
 from .models import Numberplay, TicketSale
 from datetime import datetime, timedelta, date
 from django.http import HttpResponseRedirect, HttpResponse
@@ -79,18 +79,17 @@ def profile(request):
         day_sale = 0
         week_sale = 0
         pay = 0
-    print(day_sale)
     query1 = TicketSale.objects.all().values_list()
     query2 = Numberplay.objects.all().values_list()
     # print(query1[0][5])
     # print(query1[0][4])
-    # print(query2)
+    #print(query1)
 
     dicts = {}
     def findNumber():
 
-        found = 0
         for i in query1:
+            uid = i[0]
             j = i[2]
             v = i[3]
             d = i[5]
@@ -105,18 +104,19 @@ def profile(request):
                 #print(p, da, ta)
 
                 if j == p and d == da and t == ta and s == 0:
-                    found = found+1
-                    #print(found)
-                    dicts[found] = j
-                    dicts[found] = v
-                    #print(dicts)
-                    #print('<-----Found Winning number----->')
-                    #print(j, v, d, t)
-                    #print('<-----Found Winning number----->')
+                    dicts[uid] = uid
+                    dicts[uid] = v
+                    print(dicts)
+                    print('<-----Found Winning number----->')
+                    print(j, v, d, t)
+                    print('<-----Found Winning number----->')
                     #dick = j, v, t, d
                     #print(dick)
         return dicts
 
+    if request.method == 'POST':
+        username = request.POST.get('Pay')
+        print(username)
     num = findNumber()
     #print(dicts)
 
@@ -130,6 +130,24 @@ def profile(request):
 
     return render(request, 'caspotapp/profile.html', context=context)
 
+class WinnersListView(DetailView):
+    model = TicketSale
+    context_object_name = 'number_detail'
+    template_name = 'caspotapp/number_win.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class WinnerUpdateView(UpdateView):
+    fields = ('won',)
+    model = TicketSale
+
+    success_url = '../profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 def user_logout(request):
     logout(request)
@@ -158,12 +176,17 @@ def user_login(request):
 
 
 def make_sale(request):
+    today_day = date.today()
+    today_time = datetime.now()
+    print(today_time)
     context = {}
     # grabing the lists of input values with getlist()
     # request.POST.get() returns only 1st value but we are working with multiple forms
     num_sells = request.POST.getlist('num_sell')
     values = request.POST.getlist('value')
     draw_times = request.POST.getlist('draw_time')
+
+
 
     # each time this if block is executed if form is submitted with POST method
     if request.method == 'POST':
@@ -178,16 +201,21 @@ def make_sale(request):
             total_forms = len(num_sells)
             # from above example, 2 froms are being submitted so each input list have length of 2
             for i in range(total_forms):
+
                 # creating TicketSale objects
                 # everytime with field "vendor" having default value of current logged in user (request.user)
                 # rest of the fields having values in sequece (as python lists maintain sequence of indexes)
                 temp_obj = TicketSale(vendor=request.user, num_sell=num_sells[i], value=values[i],
-                                      draw_time=draw_times[i])
+                                      draw_time=draw_times[i], draw_date=today_day)
                 temp_obj.save()
-            context['message'] = f'{total_forms} record(s) saved...'
+            total = 0
+            for val in values:
+                total = total + int(val)
+            context['message'] = f'{total_forms} Number(s) sold for ${total}...'
+
         else:
             # This code block will be executed if there are some missing values or extra values
-            context['message'] = "Something went wrong..."
+            context['message'] = "Please check Admin Something went wrong..."
 
     # everytime we pass "inputs" which essentially are inputs from forms.py file.
     context['inputs'] = TicketSaleForm()

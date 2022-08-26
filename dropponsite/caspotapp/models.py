@@ -31,11 +31,11 @@ class Numberplay(models.Model):
 class TicketSale(models.Model):
     DRAW_TIMES = (
         ('8:30', 'Early Bird'),
-        ('10:30', 'Drive Time'),
+        ('10:30', 'Morning'),
         ('1:00', 'Midday'),
         ('3:00', 'Afternoon'),
-        ('5:00', 'Evening'),
-        ('8:25', 'Late Night'),
+        ('5:00', 'Drivetime'),
+        ('8:25', 'Evening'),
     )
     vendor = models.ForeignKey(User, on_delete=models.CASCADE)
     num_sell = models.PositiveIntegerField()

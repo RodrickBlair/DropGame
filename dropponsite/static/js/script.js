@@ -57,12 +57,12 @@ function add_row() {
 
     td1.appendChild(num_sell_input)
     td2.appendChild(value_input)
-    td3.innerHTML = select_element
+
     td4.innerHTML = remove_btn
 
     tr.appendChild(td1)
     tr.appendChild(td2)
-    tr.appendChild(td3)
+
     tr.appendChild(td4)
 
 

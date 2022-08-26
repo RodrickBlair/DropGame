@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView,UpdateView
+from django.views.generic import ListView, DetailView, UpdateView
 from .models import Numberplay, TicketSale
 from datetime import datetime, timedelta, date
 from django.http import HttpResponseRedirect, HttpResponse
@@ -70,12 +70,26 @@ def profile(request):
     today = date.today()
     day_sale = TicketSale.objects.filter(vendor=request.user, draw_date__gte=str(today)).aggregate(Sum('value'))
 
+    winners = TicketSale.objects.filter(vendor=request.user, won=1).aggregate(Sum('value'))
+
+    total_sale = TicketSale.objects.filter(vendor=request.user).aggregate(Sum('value'))
+
+    try:
+        p_out = winners['value__sum']
+        total_payout = p_out * 30
+    except:
+        total_payout = 0
+
 
     try:
         day_sale = day_sale['value__sum']
         week_sale = weekly_sale['value__sum']
         pay = 10 / 100 * weekly_sale['value__sum']
+
+        total_sale = (total_sale['value__sum'])
+        total = total_sale - total_payout
     except:
+        total = 0
         day_sale = 0
         week_sale = 0
         pay = 0
@@ -83,9 +97,10 @@ def profile(request):
     query2 = Numberplay.objects.all().values_list()
     # print(query1[0][5])
     # print(query1[0][4])
-    #print(query1)
+    # print(query1)
 
     dicts = {}
+
     def findNumber():
 
         for i in query1:
@@ -110,17 +125,18 @@ def profile(request):
                     print('<-----Found Winning number----->')
                     print(j, v, d, t)
                     print('<-----Found Winning number----->')
-                    #dick = j, v, t, d
-                    #print(dick)
+                    # dick = j, v, t, d
+                    # print(dick)
         return dicts
 
-    if request.method == 'POST':
-        username = request.POST.get('Pay')
-        print(username)
+
     num = findNumber()
-    #print(dicts)
+    print(num)
+    print('find none')
 
     context = {
+        'total': total,
+        'total_payout': total_payout,
         'num': num,
         'weeksale': week_sale,
         'pay': pay,
@@ -129,6 +145,7 @@ def profile(request):
     }
 
     return render(request, 'caspotapp/profile.html', context=context)
+
 
 class WinnersListView(DetailView):
     model = TicketSale
@@ -139,6 +156,7 @@ class WinnersListView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+
 class WinnerUpdateView(UpdateView):
     fields = ('won',)
     model = TicketSale
@@ -148,6 +166,7 @@ class WinnerUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 
 def user_logout(request):
     logout(request)
@@ -177,36 +196,66 @@ def user_login(request):
 
 def make_sale(request):
     today_day = date.today()
-    today_time = datetime.now()
-    print(today_time)
     context = {}
     # grabing the lists of input values with getlist()
     # request.POST.get() returns only 1st value but we are working with multiple forms
     num_sells = request.POST.getlist('num_sell')
     values = request.POST.getlist('value')
-    draw_times = request.POST.getlist('draw_time')
+    #draw_times = request.POST.getlist('draw_time')
 
+    today_time = datetime.now().strftime("%T")
+    time = today_time
+    print(time)
+    hour = int(time[0:2])
+    min = int(time[3:5])
+    print(hour)
+    print(min)
+    def draw_t():
+        if hour <= int(8) and min < int(25):
+            t = '8:30'
+            return t
+        elif hour < int(10) and min < int(25):
+            t = '10:30'
+            return t
+        elif hour <= int(12) and min < int(25):
+            t = '1:00'
+            return t
+        elif hour <= int(14) and min < int(55):
+            t = '3:00'
+            return t
+        elif hour <= int(16) and min < int(55):
+            t = '5:00'
+            return t
+        elif hour <= int(20) and min < int(20):
+            t = '8:20'
+            return t
+        else:
+            t = '8:30'
+            return t
 
-
+    now = str(draw_t())
+    print(now)
     # each time this if block is executed if form is submitted with POST method
     if request.method == 'POST':
+        print(num_sells)
+        print(values)
+        #print(draw_times)
         # checking if every field have same number of inputs
         # For Example
         # num_sells = ['value1', 'value2']
         # values = ['value1', 'value2']
         # draw_times = ['value1', 'value2']
         # if any of the input list have less or more number of values, it is not going to save data to database
-        if len(num_sells) == len(values) == len(draw_times):
+        if len(num_sells) == len(values):
             # just getting common length of input lists
             total_forms = len(num_sells)
             # from above example, 2 froms are being submitted so each input list have length of 2
             for i in range(total_forms):
-
                 # creating TicketSale objects
                 # everytime with field "vendor" having default value of current logged in user (request.user)
                 # rest of the fields having values in sequece (as python lists maintain sequence of indexes)
                 temp_obj = TicketSale(vendor=request.user, num_sell=num_sells[i], value=values[i],
-                                      draw_time=draw_times[i], draw_date=today_day)
+                                      draw_time=now, draw_date=today_day)
                 temp_obj.save()
             total = 0
             for val in values:

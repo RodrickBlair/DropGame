@@ -80,7 +80,6 @@ def profile(request):
     except:
         total_payout = 0
 
-
     try:
         day_sale = day_sale['value__sum']
         week_sale = weekly_sale['value__sum']
@@ -93,7 +92,7 @@ def profile(request):
         day_sale = 0
         week_sale = 0
         pay = 0
-    query1 = TicketSale.objects.all().values_list()
+    query1 = TicketSale.objects.filter(vendor=request.user).values_list()
     query2 = Numberplay.objects.all().values_list()
     # print(query1[0][5])
     # print(query1[0][4])
@@ -110,13 +109,13 @@ def profile(request):
             d = i[5]
             t = i[4]
             s = i[6]
-            #print(j, d, t)
+            # print(j, d, t)
 
             for n in query2:
                 p = n[1]
                 da = n[3]
                 ta = n[4]
-                #print(p, da, ta)
+                # print(p, da, ta)
 
                 if j == p and d == da and t == ta and s == 0:
                     dicts[uid] = uid
@@ -129,12 +128,13 @@ def profile(request):
                     # print(dick)
         return dicts
 
-
     num = findNumber()
-    print(num)
-    print('find none')
+    active_user = request.user
+    #print(active_user)
+    #print(num)
 
     context = {
+        'active_user': active_user,
         'total': total,
         'total_payout': total_payout,
         'num': num,
@@ -201,45 +201,53 @@ def make_sale(request):
     # request.POST.get() returns only 1st value but we are working with multiple forms
     num_sells = request.POST.getlist('num_sell')
     values = request.POST.getlist('value')
-    #draw_times = request.POST.getlist('draw_time')
+    # draw_times = request.POST.getlist('draw_time')
 
     today_time = datetime.now().strftime("%T")
     time = today_time
-    print(time)
+    session = 'AM'
+    # print(time)
     hour = int(time[0:2])
     min = int(time[3:5])
-    print(hour)
-    print(min)
-    def draw_t():
-        if hour <= int(8) and min < int(25):
-            t = '8:30'
-            return t
-        elif hour < int(10) and min < int(25):
-            t = '10:30'
-            return t
-        elif hour <= int(12) and min < int(25):
-            t = '1:00'
-            return t
-        elif hour <= int(14) and min < int(55):
-            t = '3:00'
-            return t
-        elif hour <= int(16) and min < int(55):
-            t = '5:00'
-            return t
-        elif hour <= int(20) and min < int(20):
-            t = '8:20'
-            return t
-        else:
-            t = '8:30'
-            return t
 
-    now = str(draw_t())
-    print(now)
+    # print(hour)
+    # print(min)
+    # print(hour)
+    if hour == 0:
+        hour = 12
+    elif hour > 12:
+        hour = hour - 12
+        session = "PM"
+    elif hour == 12 and session == 'AM':
+        session = 'PM'
+
+    print(hour)
+    print(session)
+
+    draw = None
+    if hour < 8 and session == 'AM' or hour == 8 and min <= 25 and session == 'AM':
+        draw = '8:30'
+    elif hour >= 8 or hour <= 12 and session == 'PM':
+        draw = date.today() + timedelta(1)
+    elif 8 >= hour < 10 and session == 'AM' or hour == 10 and min <= 25 and session == 'AM':
+        draw = '10:30'
+    elif hour == 10 or hour == 11 and session == 'AM' or hour == 12 and min <= 55 and session == 'PM':
+        draw = '1:00'
+        session = 'PM'
+    elif hour == 12 and session == 'PM' or hour == 1 and session == 'PM' or hour == 2 and min <= 55 and session == 'PM':
+        draw = '3:00'
+    elif hour == 2 and session == 'PM' or hour <= 3 and session == 'PM' or hour == 4 and min <= 55 and session == 'PM':
+        draw = '5:00'
+    elif hour < 8 and session == 'PM' or hour == 8 and min < 25 and session == 'PM':
+        draw = '8:25'
+    else:
+        print('Bed-time')
+    # print(draw)
     # each time this if block is executed if form is submitted with POST method
     if request.method == 'POST':
         print(num_sells)
         print(values)
-        #print(draw_times)
+        # print(draw_times)
         # checking if every field have same number of inputs
         # For Example
         # num_sells = ['value1', 'value2']
@@ -255,7 +263,7 @@ def make_sale(request):
                 # everytime with field "vendor" having default value of current logged in user (request.user)
                 # rest of the fields having values in sequece (as python lists maintain sequence of indexes)
                 temp_obj = TicketSale(vendor=request.user, num_sell=num_sells[i], value=values[i],
-                                      draw_time=now, draw_date=today_day)
+                                      draw_time=draw, draw_date=today_day)
                 temp_obj.save()
             total = 0
             for val in values:
@@ -268,6 +276,8 @@ def make_sale(request):
 
     # everytime we pass "inputs" which essentially are inputs from forms.py file.
     context['inputs'] = TicketSaleForm()
+    context['draw'] = draw
+    context['session'] = session
 
     return render(request, 'caspotapp/make_sale.html', context)
 

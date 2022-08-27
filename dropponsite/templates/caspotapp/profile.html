@@ -9,12 +9,12 @@
                 <div class="row align-items-center flex-row-reverse">
                     <div class="col-lg-6">
                         <div class="about-text go-to">
-                            <h3 class="dark-color">Rodrick</h3>
-                            <h6 class="theme-color lead">Welcome to Droppan</h6>
+                            <h3 class="dark-color">Welcome {{ active_user }}</h3>
+                            <h6 class="theme-color lead">This is the Droppan Game</h6>
                             <div class="row about-list">
                                 <div class="col-md-12">
                                     <div class="media">
-                                        <a class="btn btn-primary" href="makesale" role="button">Make Sale</a>
+                                        <a class="btn btn-primary" href="makesale" role="button">Buy Number(s)</a>
                                     </div>
                                     <br>
                                 </div>
@@ -64,13 +64,16 @@
             </div>
 </section>
 <section>
-    <h1>Amount to pay out</h1>
-    <ul>
+    <table>
+        <thead>
+        <tr><h1>Amount to pay out</h1></tr>
+        </thead>
+        <tbody>
         {% for x, y in num.items %}
-        <li>You have <a href="wins/{{ x }}">${{ y }}</a> to Payout Click for details</li><br>
-        <a href="update/{{ x }}">Pay</a>
+        <tr>You have <a href="wins/{{ x }}">${{ y }}</a> to Payout Click for details <a href="update/{{ x }}">Pay</a></tr>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 </section>
 
 {% endblock %}

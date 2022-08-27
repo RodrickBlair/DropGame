@@ -26,17 +26,18 @@ function currentTime() {
 let date = new Date();
 let mi = date.getMinutes();
 let ho = date.getHours();
-if(ho <= 8 && mi <= 26){
+console.log('Selling for')
+if(ho <= 8 && mi < 25 && session == 'AM'){
     console.log('8:30AM Early Bird Draw')
-}else if(ho <= 10 && mi <= 26){
+}else if(ho >= 8 || ho <= 10 && mi <= 25 && session == 'AM'){
     console.log('10:30AM Morning Draw')
-}else if(ho <= 10 && mi <=25){
+}else if(ho >= 10 || ho <= 12 && mi <= 55){
     console.log('1:00PM Midday Draw')
-}else if(ho <= 15){
+}else if(ho >= 1 || ho <= 2 && mi <= 55 && session == 'PM'){
     console.log('3:00PM Mid Afternoon Draw')
-}else if(ho <= 17){
+}else if(ho >= 3 || ho <= 4 && mi <= 55 && session == 'PM'){
     console.log('5:00PM Drive Time Draw')
-}else if(ho <= 20 && mi <= 25){
+}else if(ho <= 8 && mi <= 25 && session == 'PM'){
     console.log('8:25PM Evening Draw')
 }else{
     console.log('Prepare for tomorrow')

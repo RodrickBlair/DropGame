@@ -109,7 +109,7 @@ def profile(request):
             d = i[5]
             t = i[4]
             s = i[6]
-            # print(j, d, t)
+            #print(j, d, t)
 
             for n in query2:
                 p = n[1]
@@ -221,15 +221,14 @@ def make_sale(request):
     elif hour == 12 and session == 'AM':
         session = 'PM'
 
-    print(hour)
-    print(session)
+    #print(hour)
+    #print(session)
+    #print(min)
 
     draw = None
     if hour < 8 and session == 'AM' or hour == 8 and min <= 25 and session == 'AM':
         draw = '8:30'
-    elif hour >= 8 or hour <= 12 and session == 'PM':
-        draw = date.today() + timedelta(1)
-    elif 8 >= hour < 10 and session == 'AM' or hour == 10 and min <= 25 and session == 'AM':
+    elif hour > 8 and hour < 10 and session == 'AM' or hour == 10 and min <= 25 and session == 'AM':
         draw = '10:30'
     elif hour == 10 or hour == 11 and session == 'AM' or hour == 12 and min <= 55 and session == 'PM':
         draw = '1:00'
@@ -242,7 +241,7 @@ def make_sale(request):
         draw = '8:25'
     else:
         print('Bed-time')
-    # print(draw)
+    #print(draw)
     # each time this if block is executed if form is submitted with POST method
     if request.method == 'POST':
         print(num_sells)

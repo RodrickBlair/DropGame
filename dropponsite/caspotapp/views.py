@@ -193,9 +193,11 @@ def user_login(request):
     else:
         return render(request, 'caspotapp/login.html', {})
 
-
+@login_required
 def make_sale(request):
     today_day = date.today()
+    tomorrow = date.today() + timedelta(1)
+    #print(today_day)
     context = {}
     # grabing the lists of input values with getlist()
     # request.POST.get() returns only 1st value but we are working with multiple forms
@@ -206,41 +208,48 @@ def make_sale(request):
     today_time = datetime.now().strftime("%T")
     time = today_time
     session = 'AM'
-    # print(time)
+    print(time)
     hour = int(time[0:2])
     min = int(time[3:5])
 
-    # print(hour)
+    print(hour)
     # print(min)
     # print(hour)
     if hour == 0:
         hour = 12
     elif hour > 12:
         hour = hour - 12
-        session = "PM"
+        session = 'PM'
     elif hour == 12 and session == 'AM':
         session = 'PM'
 
-    #print(hour)
-    #print(session)
-    #print(min)
+    print(hour)
+    print(min)
+    print(session)
+
 
     draw = None
-    if hour < 8 and session == 'AM' or hour == 8 and min <= 25 and session == 'AM':
+    if hour <= 8 and min > 25 and session == 'AM':
         draw = '8:30'
-    elif hour > 8 and hour < 10 and session == 'AM' or hour == 10 and min <= 25 and session == 'AM':
+    elif hour < 8 and hour < 10 and session == 'AM' or hour == 10 and min <= 25 and session == 'AM':
         draw = '10:30'
-    elif hour == 10 or hour == 11 and session == 'AM' or hour == 12 and min <= 55 and session == 'PM':
+    elif session == 'AM' and hour == 10 or hour == 11 and session == 'AM' or hour == 12 and min <= 54 and session == 'PM':
         draw = '1:00'
         session = 'PM'
-    elif hour == 12 and session == 'PM' or hour == 1 and session == 'PM' or hour == 2 and min <= 55 and session == 'PM':
+    elif hour == 12 and session == 'PM' or hour == 1 and session == 'PM' or hour == 2 and min <= 54 and session == 'PM':
         draw = '3:00'
-    elif hour == 2 and session == 'PM' or hour <= 3 and session == 'PM' or hour == 4 and min <= 55 and session == 'PM':
+    elif hour == 2 and session == 'PM' or hour <= 3 and session == 'PM' or hour == 4 and min <= 54 and session == 'PM':
         draw = '5:00'
     elif hour < 8 and session == 'PM' or hour == 8 and min < 25 and session == 'PM':
         draw = '8:25'
+    elif hour > 8 and session == 'PM':
+        draw = '8:30'
+        session = 'AM'
+        today_day = tomorrow
+        to = 'Tomorrow'
     else:
-        print('Bed-time')
+        print('Cant find any timeframe')
+        #print(today_day)
     #print(draw)
     # each time this if block is executed if form is submitted with POST method
     if request.method == 'POST':
@@ -268,15 +277,22 @@ def make_sale(request):
             for val in values:
                 total = total + int(val)
             context['message'] = f'{total_forms} Number(s) sold for ${total}...'
+            return HttpResponseRedirect(reverse('profile'), context)
 
         else:
             # This code block will be executed if there are some missing values or extra values
             context['message'] = "Please check Admin Something went wrong..."
 
     # everytime we pass "inputs" which essentially are inputs from forms.py file.
+    context['numbers'] = num_sells
+    context['values'] = values
     context['inputs'] = TicketSaleForm()
     context['draw'] = draw
     context['session'] = session
+    try:
+        context['to'] = to
+    except:
+        context['to'] = 'Tomorrow'
 
     return render(request, 'caspotapp/make_sale.html', context)
 

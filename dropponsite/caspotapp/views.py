@@ -228,10 +228,11 @@ def make_sale(request):
     print(session)
 
 
+
     draw = None
-    if hour <= 8 and min > 25 and session == 'AM':
+    if hour <= 8 and min <= 25 and session == 'AM' or hour <= 8 and session == 'AM':
         draw = '8:30'
-    elif hour < 8 and hour < 10 and session == 'AM' or hour == 10 and min <= 25 and session == 'AM':
+    elif hour >= 8 and hour < 10 and session == 'AM' or hour == 10 and min <= 24 and session == 'AM':
         draw = '10:30'
     elif session == 'AM' and hour == 10 or hour == 11 and session == 'AM' or hour == 12 and min <= 54 and session == 'PM':
         draw = '1:00'
@@ -277,7 +278,7 @@ def make_sale(request):
             for val in values:
                 total = total + int(val)
             context['message'] = f'{total_forms} Number(s) sold for ${total}...'
-            return HttpResponseRedirect(reverse('profile'), context)
+            return HttpResponseRedirect(reverse('profile'))
 
         else:
             # This code block will be executed if there are some missing values or extra values
@@ -289,6 +290,7 @@ def make_sale(request):
     context['inputs'] = TicketSaleForm()
     context['draw'] = draw
     context['session'] = session
+    context['today_day'] = today_day
     try:
         context['to'] = to
     except:

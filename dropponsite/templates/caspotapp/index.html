@@ -2,10 +2,11 @@
 {% extends "caspotapp/base.html" %}
 {% block body_block %}
 
-  <div class="row text-center" >
+<div class="container">
+    <div class="row text-center" >
     <h2>Numbers Played Today</h2>
     <h3> Date: {{ today_date }}</h3>
-    <table style="width:100%">
+    <table class="table" style="width:100%">
       <tr>
     {% for numberplay in number_play %}
         <td>
@@ -19,7 +20,7 @@
   <div class="row text-center">
     <h2>Numbers Under For Kent</h2>
     <h3> Date: {{ under_date }}</h3>
-    <table style="width:100%">
+    <table class="table" style="">
       <tr>
     {% for i in kent_numbers %}
      <td>
@@ -29,5 +30,6 @@
     </tr>
 </table>
   </div>
+</div>
 
 {% endblock %}

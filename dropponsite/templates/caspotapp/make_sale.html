@@ -10,7 +10,7 @@
 </style>
 <div class="container text-center">
 	<h3>DROPPON SALE</h3>
-	<h4>You're Selling for {{ draw }} {{ session }} Draw</h4>
+	<h4>Selling For<br>{{ today_day }}<br>{{ draw }} {{ session }} Draw</h4>
 	<br>
 	<div id="clock" onload="currentTime()"></div>
 	<div>
@@ -23,10 +23,10 @@
 						<thead>
 							<tr>
 								<th class="text-center">
-									num_sell
+									Cashpot #
 								</th>
 								<th class="text-center">
-									value
+									Amount $
 								</th>
 
 								<th class="text-center"
@@ -39,10 +39,10 @@
 
 							<tr>
 								<td>
-									{% render_field inputs.num_sell class="form-control" %}
+									{% render_field inputs.num_sell autocomplete="off" class="form-control" %}
 								</td>
 								<td>
-									{% render_field inputs.value class="form-control" %}
+									{% render_field inputs.value autocomplete="off" class="form-control" %}
 								</td>
 
 								<td>
@@ -52,6 +52,7 @@
 						</tbody>
 
 					</table>
+					<input type="reset" value="reset" class="btn btn-warning btn-lg w-5">
 					<input type="submit" value="Submit" class="btn btn-success btn-lg w-5">
 				</div>
 			</div>

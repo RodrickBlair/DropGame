@@ -26,6 +26,7 @@ function add_row() {
     num_sell_input.setAttribute('type', 'number')
     num_sell_input.setAttribute('name', 'num_sell')
     num_sell_input.setAttribute('required', '')
+    num_sell_input.setAttribute('autocomplete', 'off')
     num_sell_input.classList.add('form-control')
 
 
